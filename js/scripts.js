@@ -1,12 +1,9 @@
-let baseUrl = 'https://randomuser.me/api/?results=12';
+let baseUrl = 'https://randomuser.me/api/?results=12&nat=AU,BR,CA,CH,DE,DK,ES,FI,FR,GB,IE,NO,NL,NZ,US';
 let baseUrl1 = 'https://randomuser.me/api';
 const search = document.querySelector('.search-container');
 const gallery = document.querySelector('.gallery');
 const cards = document.querySelectorAll('.card');
 const body = document.querySelector('body');
-const closeBtn = document.getElementById('modal-close-btn');
-const prevBtn = document.getElementById('modal-prev');
-const nextBtn = document.getElementById('modal-next');
 
 function appendSearch(){
     search.innerHTML=`<form action="#" method="get">
@@ -56,6 +53,10 @@ function generateUserProfile(data, i){
                     <button type="button" id="modal-next" class="modal-next btn">Next</button>
                 </div>
             </div>`;
+
+    const closeBtn = document.getElementById('modal-close-btn');
+    const prevBtn = document.getElementById('modal-prev');
+    const nextBtn = document.getElementById('modal-next');
 
     closeBtn.addEventListener('click', e=>{
         document.querySelector('.modal-container').remove();
