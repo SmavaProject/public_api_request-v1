@@ -4,10 +4,9 @@ const search = document.querySelector('.search-container');
 const gallery = document.querySelector('.gallery');
 const cards = document.querySelectorAll('.card');
 const body = document.querySelector('body');
-
-//console.log(profiles);
-
-//profiles.results.forEach(data=> console.log(("name = " + data.name + "; email = " + data.email +"; city = " + data.location.city)));
+const closeBtn = document.getElementById('modal-close-btn');
+const prevBtn = document.getElementById('modal-prev');
+const nextBtn = document.getElementById('modal-next');
 
 function appendSearch(){
     search.innerHTML=`<form action="#" method="get">
@@ -15,7 +14,6 @@ function appendSearch(){
     <input type="submit" value="&#x1F50D;" id="search-submit" class="search-submit">
     </form>`;
 }
-
 
 function createGaleryEntry(data){
     console.log(data);
@@ -37,85 +35,77 @@ function createGaleryEntry(data){
     }
 }
 
-function generateUserProfile(data){
-
-    alert(typeof data);
+function generateUserProfile(data, i){
     console.log(data);
-    body.innerHTML = `<div class="modal-container">
+    body.innerHTML += `<div class="modal-container">
                 <div class="modal">
                     <button type="button" id="modal-close-btn" class="modal-close-btn"><strong>X</strong></button>
                     <div class="modal-info-container">
-                        <img class="modal-img" src="https://placehold.it/125x125" alt="profile picture">
-                        <h3 id="name" class="modal-name cap">${data.name.first}</h3>
-                        <p class="modal-text">${data.email}</p>
-                        <p class="modal-text cap">${data.location.city}</p>
+                        <img class="modal-img" src="${data[i].picture.large}" alt="profile picture">
+                        <h3 id="name" class="modal-name cap">${data[i].name.first}</h3>
+                        <p class="modal-text">${data[i].email}</p>
+                        <p class="modal-text cap">${data[i].location.city}</p>
                         <hr>
-                        <p class="modal-text">${data.phone}</p>
-                        <p class="modal-text">${data.location.street.number}, ${data.location.street.name}</p>
-                        <p class="modal-text">${data.registered.date}</p>
+                        <p class="modal-text">${data[i].phone}</p>
+                        <p class="modal-text">${data[i].location.street.number}, ${data[i].location.street.name}</p>
+                        <p class="modal-text">${data[i].registered.date}</p>
                     </div>
                 </div>
-
-                // IMPORTANT: Below is only for exceeds tasks 
                 <div class="modal-btn-container">
                     <button type="button" id="modal-prev" class="modal-prev btn">Prev</button>
                     <button type="button" id="modal-next" class="modal-next btn">Next</button>
                 </div>
             </div>`;
-};
-/*
-cards.forEach(card => {
-    debugger;
-    card.addEventListener('click', e => {
-        alert("card is clicked");
-        generateUserProfile();
+
+    closeBtn.addEventListener('click', e=>{
+        document.querySelector('.modal-container').remove();
+        showUserProfile(data);
     });
-});
-*/
+
+    let len = data.length;
+    prevBtn.addEventListener('click', e => {
+        document.querySelector('.modal-container').remove();
+        if (i===0){
+            generateUserProfile(data, len-1);
+        }else {
+            generateUserProfile(data, i - 1);
+        }
+    });
+    nextBtn.addEventListener('click', e => {
+        document.querySelector('.modal-container').remove();
+        if (i ===len -1){
+            generateUserProfile(data, 0);
+        }else {
+            generateUserProfile(data, i + 1);
+        }
+    });
+};
+
 
 function showUserProfile(data) {
-    alert(typeof data);
     const cards = document.querySelectorAll('.card');
     for (let i = 0; i < cards.length; i++) {
         cards[i].addEventListener('click', (e) =>
-            generateUserProfile(data[i]));
+            generateUserProfile(data, i));
     }
 }
 
-function onStartup(){
+function onStartup() {
     appendSearch();
-    //createGaleryEntry();
-
-// let profiles =
-     fetch(baseUrl)
+    fetch(baseUrl)
         .then(response => response.json())
         .then(data => {
             createGaleryEntry(data.results);
             showUserProfile(data.results);
+        })
+        .catch(error => console.log('something went wrong', error));
+    /*    .then(data => {
+            console.log(data.results[0].name.first);
+            console.log(data.results[0].picture.medium);
         });
-/*    .then(data => {
-        console.log(data.results[0].name.first);
-        console.log(data.results[0].picture.medium);
-    });
-*/
+    */
 
- //profiles.forEach(entry => console.log(entry.gender));
+    //profiles.forEach(entry => console.log(entry.gender));
 }
 onStartup();
-/***
- * function generateHTML(data) {
-  const section = document.createElement('section');
-  peopleList.appendChild(section);
-  section.innerHTML = `
-    <img src=${data.thumbnail.source}>
-    <h2>${data.title}</h2>
-    <p>${data.description}</p>
-    <p>${data.extract}</p>
-  `;
-}
- *
- *
- *
- *
- *
- */
+
