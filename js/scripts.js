@@ -159,7 +159,3 @@ function deleteMessage(){
     }
 }
 onStartup();
-
-
-
-
