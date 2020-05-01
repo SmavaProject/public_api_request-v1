@@ -1,39 +1,43 @@
 let baseUrl = 'https://randomuser.me/api/?results=12&nat=US';
-let baseUrl1 = 'https://randomuser.me/api';
 const search = document.querySelector('.search-container');
 const gallery = document.querySelector('.gallery');
 const body = document.querySelector('body');
 
 function appendSearch(){
-    //debugger;
     search.innerHTML=`<form action="#" method="get">
     <input type="search" id="search-input" class="search-input" placeholder="Search...">
     <input type="submit" value="&#x1F50D;" id="search-submit" class="search-submit">
     </form>`;
     let searchBtn = document.getElementById('search-submit');
     searchBtn.addEventListener('click', e =>{
+        e.preventDefault();
         const cards = document.querySelectorAll('.card');
         const cardNames = document.querySelectorAll('.card-name');
-        let searchInput = document.getElementById('search-input').value.toLowerCase();
-        let displayedCards = 0;
-        for(let i = 0; i< cardNames.length; i++){
-            //alert(searchInput);
-            //display all cards on empty search
-            if(searchInput==''){
+        let searchInput = document.getElementById('search-input').value;
+        let notDisplayedCards = 0;
+
+        //display all cards on empty search
+        if(searchInput==''){
+            deleteMessage();
+            for(let i = 0; i< cardNames.length; i++) {
                 cards[i].style.display = 'flex';
             }
+        }
+        for(let i = 0; i< cardNames.length; i++){
+            //alert(searchInput);
             //debugger;
-            let cardName = cardNames[i].textContent.toLowerCase();
-            if (cardName.includes(searchInput)) {
+            let cardName = cardNames[i].textContent;
+            if (cardName.toLowerCase().includes(searchInput.toLowerCase())) {
                 cards[i].style.display = 'flex';
+                //notDisplayedCards--;
                 //alert(searchInput);
             }else{
                 cards[i].style.display = 'none';
-                displayedCards++;
+                notDisplayedCards++;
             }
         }
-        if (displayedCards==0){
-            //displayMessage();
+        if (notDisplayedCards==cardNames.length){
+            displayMessage();
         }
     });
 }
@@ -140,11 +144,19 @@ function onStartup() {
 }
 
 function displayMessage(){
-    debugger;
+    //debugger;
     let header = document.querySelector('.header-text-container');
     let h2 = document.createElement('h2');
-    h2.textContent = "Nothing has been found";
+    h2.className = 'search-failed';
+    h2.textContent = "Nothing has been found...";
     header.appendChild(h2);
+}
+function deleteMessage(){
+    let header = document.querySelector('.header-text-container');
+    let h2 = document.querySelector('.search-failed');
+    if ( h2 !== null){
+        header.removeChild(h2);
+    }
 }
 onStartup();
 
