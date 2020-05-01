@@ -1,10 +1,11 @@
-let baseUrl = 'https://randomuser.me/api/?results=12&nat=AU,BR,CA,CH,DE,DK,ES,FI,FR,GB,IE,NO,NL,NZ,US';
+let baseUrl = 'https://randomuser.me/api/?results=12&nat=US';
 let baseUrl1 = 'https://randomuser.me/api';
 const search = document.querySelector('.search-container');
 const gallery = document.querySelector('.gallery');
 const body = document.querySelector('body');
 
 function appendSearch(){
+    //debugger;
     search.innerHTML=`<form action="#" method="get">
     <input type="search" id="search-input" class="search-input" placeholder="Search...">
     <input type="submit" value="&#x1F50D;" id="search-submit" class="search-submit">
@@ -38,6 +39,7 @@ function appendSearch(){
 }
 
 function createGaleryEntry(data) {
+    //debugger;
     console.log(data);
     for (let i = 0; i < data.length; i++) {
         gallery.innerHTML += `
@@ -58,6 +60,12 @@ function createGaleryEntry(data) {
 
 function generateUserProfile(data, i){
     console.log(data);
+    //debugger;
+    let l = data[i].dob.date.length;
+    console.log(l);
+    let bdate = data[i].dob.date.substr(8,2) + "/" + data[i].dob.date.substr(5,2) + "/" + data[i].dob.date.substr(2,2) ;
+    console.log(bdate);
+    //let phone = "(" + data[i].phone.substr(0,2) + ")" + data[i].phone.substr(4,6) + "-" + data[i].phone.substr(8,11);
     body.innerHTML += `<div class="modal-container">
                 <div class="modal">
                     <button type="button" id="modal-close-btn" class="modal-close-btn"><strong>X</strong></button>
@@ -68,8 +76,8 @@ function generateUserProfile(data, i){
                         <p class="modal-text cap">${data[i].location.city}</p>
                         <hr>
                         <p class="modal-text">${data[i].phone}</p>
-                        <p class="modal-text">${data[i].location.street.number}, ${data[i].location.street.name}</p>
-                        <p class="modal-text">${data[i].registered.date}</p>
+                        <p class="modal-text">${data[i].location.street.number} ${data[i].location.street.name}, ${data[i].location.state} ${data[i].location.postcode}</p>
+                        <p class="modal-text">Birthday: ${bdate}</p>
                     </div>
                 </div>
                 <div class="modal-btn-container">
@@ -83,12 +91,14 @@ function generateUserProfile(data, i){
     const nextBtn = document.getElementById('modal-next');
 
     closeBtn.addEventListener('click', e=>{
+        //debugger;
         document.querySelector('.modal-container').remove();
         showUserProfile(data);
     });
 
     let len = data.length;
     prevBtn.addEventListener('click', e => {
+        //debugger;
         document.querySelector('.modal-container').remove();
         if (i===0){
             generateUserProfile(data, len-1);
@@ -97,6 +107,7 @@ function generateUserProfile(data, i){
         }
     });
     nextBtn.addEventListener('click', e => {
+        //debugger;
         document.querySelector('.modal-container').remove();
         if (i ===len -1){
             generateUserProfile(data, 0);
@@ -108,6 +119,7 @@ function generateUserProfile(data, i){
 
 
 function showUserProfile(data) {
+    //debugger;
     const cards = document.querySelectorAll('.card');
     for (let i = 0; i < cards.length; i++) {
         cards[i].addEventListener('click', (e) =>
@@ -117,6 +129,7 @@ function showUserProfile(data) {
 
 
 function onStartup() {
+    //debugger;
     fetch(baseUrl)
         .then(response => response.json())
         .then(data => {
@@ -127,6 +140,7 @@ function onStartup() {
 }
 
 function displayMessage(){
+    debugger;
     let header = document.querySelector('.header-text-container');
     let h2 = document.createElement('h2');
     h2.textContent = "Nothing has been found";
