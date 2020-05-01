@@ -2,7 +2,6 @@ let baseUrl = 'https://randomuser.me/api/?results=12&nat=AU,BR,CA,CH,DE,DK,ES,FI
 let baseUrl1 = 'https://randomuser.me/api';
 const search = document.querySelector('.search-container');
 const gallery = document.querySelector('.gallery');
-const cards = document.querySelectorAll('.card');
 const body = document.querySelector('body');
 
 function appendSearch(){
@@ -10,16 +9,39 @@ function appendSearch(){
     <input type="search" id="search-input" class="search-input" placeholder="Search...">
     <input type="submit" value="&#x1F50D;" id="search-submit" class="search-submit">
     </form>`;
+    let searchBtn = document.getElementById('search-submit');
+    searchBtn.addEventListener('click', e =>{
+        const cards = document.querySelectorAll('.card');
+        const cardNames = document.querySelectorAll('.card-name');
+        let searchInput = document.getElementById('search-input').value.toLowerCase();
+        let displayedCards = 0;
+        for(let i = 0; i< cardNames.length; i++){
+            //alert(searchInput);
+            //display all cards on empty search
+            if(searchInput==''){
+                cards[i].style.display = 'flex';
+            }
+            //debugger;
+            let cardName = cardNames[i].textContent.toLowerCase();
+            if (cardName.includes(searchInput)) {
+                cards[i].style.display = 'flex';
+                //alert(searchInput);
+            }else{
+                cards[i].style.display = 'none';
+                displayedCards++;
+            }
+        }
+        if (displayedCards==0){
+            //displayMessage();
+        }
+    });
 }
 
-function createGaleryEntry(data){
+function createGaleryEntry(data) {
     console.log(data);
-    for (let i = 0; i< data.length;i++)
-    {
-        let employee = document.createElement('div');
-        employee.className='card';
-        gallery.appendChild(employee);
-        employee.innerHTML = `
+    for (let i = 0; i < data.length; i++) {
+        gallery.innerHTML += `
+                    <div class="card">
                     <div class="card-img-container">
                         <img class="card-img" src="${data[i].picture.medium}" alt="profile picture">
                     </div>
@@ -27,9 +49,11 @@ function createGaleryEntry(data){
                         <h3 id="name" class="card-name cap">${data[i].name.first}</h3>
                         <p class="card-text">${data[i].email}</p>
                         <p class="card-text cap">${data[i].location.city}, ${data[i].location.state}</p>
+                    </div>
                     </div>`;
 
     }
+    appendSearch();
 }
 
 function generateUserProfile(data, i){
@@ -91,8 +115,8 @@ function showUserProfile(data) {
     }
 }
 
+
 function onStartup() {
-    appendSearch();
     fetch(baseUrl)
         .then(response => response.json())
         .then(data => {
@@ -100,13 +124,16 @@ function onStartup() {
             showUserProfile(data.results);
         })
         .catch(error => console.log('something went wrong', error));
-    /*    .then(data => {
-            console.log(data.results[0].name.first);
-            console.log(data.results[0].picture.medium);
-        });
-    */
+}
 
-    //profiles.forEach(entry => console.log(entry.gender));
+function displayMessage(){
+    let header = document.querySelector('.header-text-container');
+    let h2 = document.createElement('h2');
+    h2.textContent = "Nothing has been found";
+    header.appendChild(h2);
 }
 onStartup();
+
+
+
 
