@@ -4,3 +4,5 @@ Changes in the style:
 2) Font color is changed to black.
 3) Font style is changed to bold.
 4) Border radius of cards and modal is changed
+5) Border color is changed
+6) Border of cards disappears on hover
