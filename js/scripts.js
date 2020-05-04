@@ -2,48 +2,63 @@ let baseUrl = 'https://randomuser.me/api/?results=12&nat=US';
 const search = document.querySelector('.search-container');
 const gallery = document.querySelector('.gallery');
 const body = document.querySelector('body');
+let header = document.querySelector('.header-text-container');
 
-function appendSearch(){
-    search.innerHTML=`<form action="#" method="get">
+/***
+ * Appends search button to the page
+ */
+search.innerHTML = `<form action="#" method="get">
     <input type="search" id="search-input" class="search-input" placeholder="Search...">
     <input type="submit" value="&#x1F50D;" id="search-submit" class="search-submit">
     </form>`;
-    let searchBtn = document.getElementById('search-submit');
-    searchBtn.addEventListener('click', e =>{
-        e.preventDefault();
-        const cards = document.querySelectorAll('.card');
-        const cardNames = document.querySelectorAll('.card-name');
-        let searchInput = document.getElementById('search-input').value;
-        let notDisplayedCards = 0;
 
-        //display all cards on empty search
-        if(searchInput==''){
-            deleteMessage();
-            for(let i = 0; i< cardNames.length; i++) {
-                cards[i].style.display = 'flex';
-            }
-        }
-        for(let i = 0; i< cardNames.length; i++){
-            //alert(searchInput);
-            //debugger;
-            let cardName = cardNames[i].textContent;
-            if (cardName.toLowerCase().includes(searchInput.toLowerCase())) {
-                cards[i].style.display = 'flex';
-                //notDisplayedCards--;
-                //alert(searchInput);
-            }else{
-                cards[i].style.display = 'none';
-                notDisplayedCards++;
-            }
-        }
-        if (notDisplayedCards==cardNames.length){
-            displayMessage();
-        }
-    });
-}
+header.innerHTML += `<h2 class="search-failed">Nothing has been found...</h2>`;
 
-function createGaleryEntry(data) {
+let searchBtn = document.getElementById('search-submit');
+let searchInputField = document.getElementById('search-input');
+
+searchBtn.addEventListener('click', e => {
+    e.preventDefault();
+    searchForEmployee();
+});
+
+searchInputField.addEventListener('input', () => {
+    searchForEmployee();
+});
+
+/***
+ *Triggers search to find matched employee cards
+ */
+function searchForEmployee() {
+    const cards = document.querySelectorAll('.card');
+    const cardNames = document.querySelectorAll('.card-name');
+    let searchInput = document.getElementById('search-input').value;
+
+    let displayedCards = cardNames.length;
+    for (let i = 0; i < cardNames.length; i++) {
+        let cardName = cardNames[i].textContent;
+        if (cardName.toLowerCase().includes(searchInput.toLowerCase())) {
+            cards[i].style.display = 'flex';
+        } else {
+            cards[i].style.display = 'none';
+            displayedCards--;
+        }
+    }
+    console.log("displayedCards " + displayedCards);
+    if (displayedCards >0) {
+        //displayMessage();
+        document.querySelector('.search-failed').style.display = 'none';
+    }else{
+        document.querySelector('.search-failed').style.display = 'block';
+    }
+};
+/***
+ *Generates HTML layout for every employee card
+ * @param data
+ */
+function createGaleryEntries(data) {
     //debugger;
+    console.log('createGaleryEntries ');
     console.log(data);
     for (let i = 0; i < data.length; i++) {
         gallery.innerHTML += `
@@ -52,34 +67,38 @@ function createGaleryEntry(data) {
                         <img class="card-img" src="${data[i].picture.medium}" alt="profile picture">
                     </div>
                     <div class="card-info-container">
-                        <h3 id="name" class="card-name cap">${data[i].name.first}</h3>
+                        <h3 id="name" class="card-name cap">${data[i].name.first} ${data[i].name.last}</h3>
                         <p class="card-text">${data[i].email}</p>
                         <p class="card-text cap">${data[i].location.city}, ${data[i].location.state}</p>
                     </div>
                     </div>`;
 
     }
-    appendSearch();
 }
 
+/***
+ *Generate HTML modal for a clicked employee
+ * @param data
+ * @param i
+ */
 function generateUserProfile(data, i){
     console.log(data);
-    //debugger;
     let l = data[i].dob.date.length;
-    console.log(l);
-    let bdate = data[i].dob.date.substr(8,2) + "/" + data[i].dob.date.substr(5,2) + "/" + data[i].dob.date.substr(2,2) ;
-    console.log(bdate);
-    //let phone = "(" + data[i].phone.substr(0,2) + ")" + data[i].phone.substr(4,6) + "-" + data[i].phone.substr(8,11);
-    body.innerHTML += `<div class="modal-container">
-                <div class="modal">
+    let bdate =  data[i].dob.date.substr(5,2) + "/" + data[i].dob.date.substr(8,2) + "/" + data[i].dob.date.substr(2,2) ;
+    let phone = data[i].phone.substr(0,5) + " " + data[i].phone.substr(6,8);
+    //create "modal-container"
+    let modalContainer = document.createElement('div');
+    modalContainer.className = "modal-container";
+    modalContainer.innerHTML =
+                `<div class="modal">
                     <button type="button" id="modal-close-btn" class="modal-close-btn"><strong>X</strong></button>
                     <div class="modal-info-container">
                         <img class="modal-img" src="${data[i].picture.large}" alt="profile picture">
-                        <h3 id="name" class="modal-name cap">${data[i].name.first}</h3>
+                        <h3 id="name" class="modal-name cap">${data[i].name.first} ${data[i].name.last}</h3>
                         <p class="modal-text">${data[i].email}</p>
                         <p class="modal-text cap">${data[i].location.city}</p>
                         <hr>
-                        <p class="modal-text">${data[i].phone}</p>
+                        <p class="modal-text">${phone}</p>
                         <p class="modal-text">${data[i].location.street.number} ${data[i].location.street.name}, ${data[i].location.state} ${data[i].location.postcode}</p>
                         <p class="modal-text">Birthday: ${bdate}</p>
                     </div>
@@ -87,22 +106,20 @@ function generateUserProfile(data, i){
                 <div class="modal-btn-container">
                     <button type="button" id="modal-prev" class="modal-prev btn">Prev</button>
                     <button type="button" id="modal-next" class="modal-next btn">Next</button>
-                </div>
-            </div>`;
-
+                </div>`;
+    body.insertBefore(modalContainer, document.querySelector('script'));
+    //select buttons on modal-container and add event listeners to them
     const closeBtn = document.getElementById('modal-close-btn');
     const prevBtn = document.getElementById('modal-prev');
     const nextBtn = document.getElementById('modal-next');
 
     closeBtn.addEventListener('click', e=>{
-        //debugger;
         document.querySelector('.modal-container').remove();
-        showUserProfile(data);
     });
 
     let len = data.length;
     prevBtn.addEventListener('click', e => {
-        //debugger;
+        console.log(e.target);
         document.querySelector('.modal-container').remove();
         if (i===0){
             generateUserProfile(data, len-1);
@@ -111,7 +128,6 @@ function generateUserProfile(data, i){
         }
     });
     nextBtn.addEventListener('click', e => {
-        //debugger;
         document.querySelector('.modal-container').remove();
         if (i ===len -1){
             generateUserProfile(data, 0);
@@ -121,9 +137,11 @@ function generateUserProfile(data, i){
     });
 };
 
-
+/***
+ *Add event listener for every employee card
+ * @param data
+ */
 function showUserProfile(data) {
-    //debugger;
     const cards = document.querySelectorAll('.card');
     for (let i = 0; i < cards.length; i++) {
         cards[i].addEventListener('click', (e) =>
@@ -131,31 +149,17 @@ function showUserProfile(data) {
     }
 }
 
-
+/***
+ *Fetch data from IPI and call functions to build the page layout
+ */
 function onStartup() {
-    //debugger;
     fetch(baseUrl)
         .then(response => response.json())
         .then(data => {
-            createGaleryEntry(data.results);
+            createGaleryEntries(data.results);
             showUserProfile(data.results);
         })
         .catch(error => console.log('something went wrong', error));
 }
 
-function displayMessage(){
-    //debugger;
-    let header = document.querySelector('.header-text-container');
-    let h2 = document.createElement('h2');
-    h2.className = 'search-failed';
-    h2.textContent = "Nothing has been found...";
-    header.appendChild(h2);
-}
-function deleteMessage(){
-    let header = document.querySelector('.header-text-container');
-    let h2 = document.querySelector('.search-failed');
-    if ( h2 !== null){
-        header.removeChild(h2);
-    }
-}
 onStartup();

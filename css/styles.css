@@ -38,7 +38,7 @@ header h1 {
 
 .search-input {
     padding: 0.4rem 1rem;
-    border: 1px solid rgba(200, 200, 200, 0.9);
+    border: 2px solid rgba(200, 200, 200, 0.9);
     border-radius: 0.25rem 0 0 0.25rem ;
     max-width: 20rem;
     transition: .4s ease-out;
@@ -46,7 +46,7 @@ header h1 {
 }
 
 .search-input:active, .search-input:hover, .search-input:focus {
-    border: 1px solid rgba(50, 50, 50, 0.9);
+    border: 2px solid rgba(50, 50, 50, 0.9);
 }
 
 .search-submit {
@@ -89,8 +89,8 @@ header h1 {
     max-width: 360px;
     margin: 10px 10px 20px;
     padding: 10px;
-    border-radius: 0.25em;
-    border: 1px solid rgba(50, 50, 50, 0.3);
+    border-radius: 0.55em;
+    border: 2px solid rgba(50, 50, 50, 0.3);
     transition: .4s ease-out;
     overflow: hidden;
     background-color: blanchedalmond;
@@ -143,8 +143,8 @@ header h1 {
     margin: 10px auto auto;
     padding-bottom: 15px;
     background: rgba(252, 225, 170, 1);
-    border-radius: 0.25em;
-    border: 1px solid rgba(100, 100, 100, 0.3);
+    border-radius: 0.55em;
+    border: 2px solid rgba(100, 100, 100, 0.3);
     transition: .4s ease-out;
 }
 
@@ -191,8 +191,8 @@ header h1 {
     padding: 10px 15px 15px;;
     margin: 10px auto auto;
     background: rgba(252, 225, 170, 1);
-    border-radius: 0.25em;
-    border: 1px solid rgba(100, 100, 100, 0.3);
+    border-radius: 0.55em;
+    border: 2px solid rgba(100, 100, 100, 0.3);
 }
 
 
@@ -243,6 +243,7 @@ header h1 {
 
 .search-failed{
     color: coral;
+    display: none;
 }
 /* ===================================== 
    Desktop
@@ -253,7 +254,8 @@ header h1 {
 
     .card:hover {
         background: rgba(255, 255, 255, 1);
-        border: 1px solid rgba(50, 50, 50, 0.9);
+        /*border: 1px solid rgba(50, 50, 50, 0.9);*/
+        border-style: none;
     }
 
     .card:hover .card-text {
